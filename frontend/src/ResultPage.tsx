@@ -42,7 +42,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
     const [chartSubtitle, setChartSubtitle] = useState('Ano de 2024');
     const [sourceText, setSourceText] = useState("Fonte: Dados fornecidos pelo usuário.");
     const [slices, setSlices] = useState<ChartDataItem[]>(initialData);
-    const [generatedImage, setGeneratedImage] = useState<string>('');
+
     const [isLoading, setIsLoading] = useState(false);
     const chartRef = useRef<ChartJS>(null);
 
@@ -87,9 +87,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
                 throw new Error(data.error);
             }
 
-            if (data.image_base64) {
-                setGeneratedImage(data.image_base64);
-            }
+
         } catch (error) {
             console.error(error);
             alert('Erro ao conectar com Python.');
@@ -98,16 +96,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
         }
     };
 
-    const handleDownload = () => {
-        if (generatedImage) {
-            const link = document.createElement('a');
-            link.href = generatedImage;
-            link.download = 'grafico.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    };
+
 
     const downloadChartPNG = () => {
         if (chartRef.current) {

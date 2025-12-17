@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { FiFileText, FiBarChart2 } from 'react-icons/fi';
+import { FiFileText, FiBarChart2, FiZap } from 'react-icons/fi';
 import * as XLSX from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
 import type { ChartDataItem, ExcelRawRow } from './types';
@@ -90,7 +90,7 @@ const QuickStartBanner: React.FC<QuickStartBannerProps> = ({
             <HeroSection>
                 <LogoContainer>
                     <LogoIconWrapper>
-                        <img src="/assets/logo.png" alt="Logo" style={{ height: '60px', width: 'auto' }} />
+                        <FiZap />
                     </LogoIconWrapper>
                     <SiteName>{siteName}</SiteName>
                 </LogoContainer>

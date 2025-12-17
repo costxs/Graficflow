@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import {
     PageContainer,
-    MainGrid,
-    Card,
-    CardTitle,
-    ChartPlaceholderBox,
-    LeftColumn,
-    RightColumn
+    MainGrid
 } from './HomePageStyles';
 import type { ChartDataItem } from './types';
 import DataPreviewModal from './components/DataPreviewModal';

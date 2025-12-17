@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import HomePage from './HomePage';
 import type { ChartDataItem } from './types';
 import ResultPage from './ResultPage';

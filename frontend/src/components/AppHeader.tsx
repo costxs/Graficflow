@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiHome } from 'react-icons/fi';
+import { FiHome, FiZap } from 'react-icons/fi';
 
 import {
     HeaderBar,
@@ -26,7 +26,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             {/* Adicionei onClick na logo também como atalho para home */}
             <LogoArea onClick={onHomeClick}>
                 <LogoIconWrapper>
-                    <img src="/assets/logo.png" alt="Logo" style={{ height: '40px', width: 'auto' }} />
+                    <FiZap />
                 </LogoIconWrapper>
                 <SiteNameText>
                     {siteName}

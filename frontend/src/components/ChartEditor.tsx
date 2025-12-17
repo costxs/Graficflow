@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import type { ChartSlice } from '../types';
+import { useState } from 'react';
+import type { ChartDataItem } from '../types';
 
 interface ChartEditorProps {
-    slices: ChartSlice[];
-    setSlices: (slices: ChartSlice[]) => void;
+    slices: ChartDataItem[];
+    setSlices: (slices: ChartDataItem[]) => void;
     chartTitle: string;
     setChartTitle: (t: string) => void;
     chartSubtitle: string;
@@ -24,7 +24,7 @@ export default function ChartEditor({
         setSlices([...slices, { id: crypto.randomUUID(), label: 'Nova Fatia', value: 100, color: colors[slices.length % colors.length] }]);
     };
 
-    const updateSlice = (id: string, field: keyof ChartSlice, value: string | number) => {
+    const updateSlice = (id: string, field: keyof ChartDataItem, value: string | number) => {
         setSlices(slices.map(s => s.id === id ? { ...s, [field]: value } : s));
     };
 
