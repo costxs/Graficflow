@@ -9,6 +9,7 @@ export default function App() {
     { id: '1', label: 'Eletrônicos', value: 450, color: '#3b82f6' },
     { id: '2', label: 'Roupas', value: 320, color: '#ef4444' },
     { id: '3', label: 'Móveis', value: 210, color: '#10b981' },
+  
   ]);
 
   const handleDataConfirmed = (data: ChartDataItem[]) => {

@@ -31,7 +31,7 @@ export const GlobalStyle = createGlobalStyle`
 export const DashboardGrid = styled.div`
   display: grid;
   /* Define as larguras: laterais fixas, meio flexível */
-  grid-template-columns: 320px 1fr 320px;
+  grid-template-columns: 320px 1fr;
   gap: 24px; /* Espaço generoso entre os cartões */
   padding: 24px;
   align-items: start;
@@ -141,7 +141,7 @@ export const ChartPlaceholder = styled.div`
   color: ${theme.textSecondary};
   font-weight: 500;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; -> Removed to allow full legend visibility */
 `;
 
 export const ChartSourceText = styled.p`

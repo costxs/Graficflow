@@ -30,11 +30,11 @@ export const ChartSectionContainer = styled.div`
 // Wrapper Acadêmico para Gráficos
 export const AcademicChartWrapper = styled.div`
   /* Define uma largura máxima razoável para uma figura de artigo (ex: meia coluna) */
-  max-width: 550px;
+  max-width: 100%;
   width: 100%;
 
   /* Define uma ALTURA FIXA. Isso é crucial para o gráfico de pizza não ficar gigante */
-  height: 400px;
+  height: 650px;
 
   /* Centraliza a figura na página ou container pai */
   margin: 20px auto;
@@ -51,9 +51,11 @@ export const AcademicChartWrapper = styled.div`
 interface ChartComponentProps {
     data: ChartDataItem[];
     title?: string;
+    externalChartRef?: React.RefObject<HTMLDivElement | null>;
+    externalLegendRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title }, ref) => {
+const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title, externalChartRef, externalLegendRef }, ref) => {
 
     // Preparar dados para o Chart.js
     const chartData = {
@@ -69,7 +71,7 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title }, re
         ],
     };
 
-    // Defina as opções com a tipagem correta
+    // Desativar a legenda do Chart.js
     const academicOptions: ChartOptions<'pie'> = {
         responsive: true,
         maintainAspectRatio: false,
@@ -83,17 +85,7 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title }, re
         },
         plugins: {
             legend: {
-                position: 'right' as const,
-                labels: {
-                    usePointStyle: true,
-                    boxWidth: 10,
-                    padding: 15,
-                    font: {
-                        family: "'Arial', 'Helvetica Neue', 'Helvetica', sans-serif",
-                        size: 12,
-                    },
-                    color: '#333333'
-                }
+                display: false, // Desativa a legenda interna
             },
             title: {
                 display: !!title,
@@ -112,7 +104,7 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title }, re
                 font: {
                     family: "'Arial', sans-serif",
                     weight: 'bold' as const,
-                    size: 14,
+                    size: 28,
                 },
                 formatter: (value: number, context: any) => {
                     const datapoints = context.chart.data.datasets[0].data as number[];
@@ -137,9 +129,38 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title }, re
 
     return (
         <ChartSectionContainer>
-            <AcademicChartWrapper>
-                <Pie ref={ref} data={chartData} options={academicOptions} />
-            </AcademicChartWrapper>
+            {/* Container Flex para alinhar Gráfico e Legenda lado a lado */}
+            <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+
+                {/* 1. Área do Gráfico */}
+                <AcademicChartWrapper ref={externalChartRef} style={{ flex: '1 1 300px', height: '400px', maxWidth: '500px' }}>
+                    <Pie ref={ref} data={chartData} options={academicOptions} />
+                </AcademicChartWrapper>
+
+                {/* 2. Legenda HTML Personalizada */}
+                <div ref={externalLegendRef} style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px' }}>
+                    {data.map((slice, index) => (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{
+                                width: '16px',
+                                height: '16px',
+                                borderRadius: '50%',
+                                backgroundColor: slice.color,
+                                flexShrink: 0 // Impede a bolinha de amassar
+                            }}></div>
+                            <span style={{
+                                fontSize: '16px',
+                                color: '#333',
+                                fontWeight: 500,
+                                lineHeight: '1.4'
+                            }}>
+                                {slice.label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
         </ChartSectionContainer>
     );
 });

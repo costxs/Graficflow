@@ -15,7 +15,9 @@ import type { ChartDataItem } from './types';
 import ChartComponent from './components/ChartComponent';
 import AppHeader from './components/AppHeader';
 import styled from 'styled-components';
-import { Chart as ChartJS } from 'chart.js';
+
+
+import html2canvas from 'html2canvas';
 
 // Estilo para o corpo da página ABAIXO do header
 const PageContentContainer = styled.div`
@@ -43,8 +45,12 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
     const [sourceText, setSourceText] = useState("Fonte: Dados fornecidos pelo usuário.");
     const [slices, setSlices] = useState<ChartDataItem[]>(initialData);
 
+
     const [isLoading, setIsLoading] = useState(false);
-    const chartRef = useRef<ChartJS>(null);
+
+    const chartWrapperRef = useRef<HTMLDivElement>(null); // Ref genérico (não usado mais para download direto)
+    const chartOnlyRef = useRef<HTMLDivElement>(null);
+    const legendOnlyRef = useRef<HTMLDivElement>(null);
 
     // Funções de manipulação de dados
     const addSlice = () => {
@@ -62,54 +68,40 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
 
     const handleGenerate = async () => {
         setIsLoading(true);
-        try {
-            const payload = {
-                title: chartTitle,
-                subtitle: chartSubtitle,
-                slices: slices.map(s => ({
-                    label: s.label,
-                    value: Number(s.value),
-                    color: s.color
-                }))
-            };
-            const response = await fetch('http://localhost:8000/generate-chart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error('Falha ao gerar gráfico');
-            }
-
-            const data = await response.json();
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-
-        } catch (error) {
-            console.error(error);
-            alert('Erro ao conectar com Python.');
-        } finally {
+        // Simulating generation/validation delay if needed, or just immediate generic success
+        setTimeout(() => {
             setIsLoading(false);
-        }
+        }, 500);
     };
 
+    const downloadElementAsPNG = async (elementRef: React.RefObject<HTMLDivElement | null>, fileName: string) => {
+        if (elementRef.current) {
+            try {
+                const canvas = await html2canvas(elementRef.current, {
+                    scale: 2,
+                    backgroundColor: null, // Transparente
+                    logging: false
+                });
 
-
-    const downloadChartPNG = () => {
-        if (chartRef.current) {
-            const titleUrl = chartRef.current.toBase64Image('image/png', 1.0);
-            const link = document.createElement('a');
-            link.download = 'meu-grafico-exato.png';
-            link.href = titleUrl;
-            link.click();
-            link.remove();
+                const image = canvas.toDataURL("image/png", 1.0);
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = image;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error(`Erro ao gerar imagem (${fileName}):`, error);
+                alert("Não foi possível gerar a imagem.");
+            }
         } else {
-            console.error("O gráfico ainda não está pronto para download.");
+            console.error(`Elemento para ${fileName} não encontrado.`);
+            alert(`Erro: Elemento para ${fileName} não encontrado.`);
         }
     };
+
+    const downloadChartOnly = () => downloadElementAsPNG(chartOnlyRef, 'grafico_somente.png');
+    const downloadLegendOnly = () => downloadElementAsPNG(legendOnlyRef, 'legenda_somente.png');
 
     return (
         <>
@@ -207,49 +199,35 @@ const ResultPage: React.FC<ResultPageProps> = ({ initialData, onBackToHome }) =>
                             <PrimaryButton onClick={handleGenerate} disabled={isLoading}>
                                 {isLoading ? 'Gerando...' : 'Gerar Gráfico'}
                             </PrimaryButton>
+
+                            <div style={{ marginTop: '24px', borderTop: '1px solid #e0e0e0', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <PrimaryButton onClick={downloadChartOnly} style={{ backgroundColor: '#2B3674' }}>
+                                    Baixar Gráfico
+                                </PrimaryButton>
+                                <PrimaryButton onClick={downloadLegendOnly} style={{ backgroundColor: '#2B3674' }}>
+                                    Baixar Legenda
+                                </PrimaryButton>
+                            </div>
                         </Card>
 
                         {/* --- Coluna 2: Visualização Principal --- */}
                         <Card style={{ minHeight: '600px' }}>
                             <CardTitle>Visualização</CardTitle>
 
-                            <ChartPlaceholder style={{ flexDirection: 'column' }}>
-                                <ChartComponent ref={chartRef} data={slices} title={chartTitle} />
+                            <ChartPlaceholder ref={chartWrapperRef} style={{ flexDirection: 'column' }}>
+                                <ChartComponent
+                                    data={slices}
+                                    title={chartTitle}
+                                    externalChartRef={chartOnlyRef}
+                                    externalLegendRef={legendOnlyRef}
+                                />
                                 <ChartSourceText>
                                     {sourceText}
                                 </ChartSourceText>
                             </ChartPlaceholder>
                         </Card>
 
-                        {/* --- Coluna 3: Dados/Detalhes --- */}
-                        <Card>
-                            <CardTitle>Detalhes</CardTitle>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                {slices.map((slice) => (
-                                    <div key={slice.id} style={{
-                                        padding: '16px',
-                                        background: '#f8f9fc',
-                                        borderRadius: '12px',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: slice.color }}></div>
-                                            <span style={{ color: '#2b3674', fontWeight: 600 }}>{slice.label}</span>
-                                        </div>
-                                        <span style={{ color: '#a3aed0', fontWeight: 500 }}>{slice.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div style={{ marginTop: 'auto' }}>
-                                <PrimaryButton onClick={downloadChartPNG} style={{ backgroundColor: '#4318FF' }}>
-                                    Baixar PNG Exato
-                                </PrimaryButton>
-                            </div>
-                        </Card>
 
                     </DashboardGrid>
                 </ContentWrapper>

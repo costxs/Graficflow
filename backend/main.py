@@ -85,10 +85,11 @@ def generate_chart(data: ChartRequest):
         plt.setp(autotexts, size=14, weight="bold")
 
         # Legenda
+        # Legenda
         ax.legend(wedges, labels,
                   title="Legenda",
-                  loc="center left",
-                  bbox_to_anchor=(1, 0, 0.5, 1),
+                  loc="upper center",
+                  bbox_to_anchor=(0.5, -0.05),
                   fontsize=12,
                   title_fontsize=14)
         
