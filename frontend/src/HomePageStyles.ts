@@ -3,18 +3,16 @@ import styled from 'styled-components';
 // --- Paleta de Cores da Imagem 02 ---
 const theme = {
   bgPage: '#f4f7fe',        // Fundo da página
-  bgCard: '#ffffff',        // Fundo dos painéis
-  textTitle: '#2b3674',     // Azul escuro para títulos
+  bgCard: 'rgba(255, 255, 255, 1)',        // Fundo dos painéis
+  textTitle: '#401ac9ff',     // Azul escuro para títulos
   textBody: '#a3aed0',      // Cinza para textos secundários
-  accent: '#4318ff',        // Azul vibrante para o botão
+  accent: '#7722ffff',        // Azul vibrante para o botão
   chartPlaceholder: '#f8f9fc', // Fundo cinza claro para a área do gráfico
   shadow: '0px 18px 40px rgba(112, 144, 176, 0.12)', // Sombra suave
   borderRadius: '24px',     // Bordas bem arredondadas
 };
 
-// --- Estrutura Principal ---
 
-// Container que cobre a tela toda e centraliza o conteúdo
 export const PageContainer = styled.div`
   min-height: 100vh;
   width: 100%;
@@ -111,7 +109,7 @@ export const ActionButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: #3311db; // Cor um pouco mais escura no hover
+    background-color: #6a09e6ff; // Cor um pouco mais escura no hover
     transform: translateY(-2px); // Leve efeito de subida
   }
 `;

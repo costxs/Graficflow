@@ -104,7 +104,7 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title, exte
                 font: {
                     family: "'Arial', sans-serif",
                     weight: 'bold' as const,
-                    size: 28,
+                    size: 16,
                 },
                 formatter: (value: number, context: any) => {
                     const datapoints = context.chart.data.datasets[0].data as number[];

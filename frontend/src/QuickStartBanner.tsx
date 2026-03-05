@@ -116,7 +116,7 @@ const QuickStartBanner: React.FC<QuickStartBannerProps> = ({
                     </ActionCardButton>
 
                     <ActionCardButton onClick={onBlankClick}>
-                        <IconWrapper style={{ color: '#05CD99', backgroundColor: '#E6FBF5' }}>
+                        <IconWrapper style={{ color: '#05CD99' }}>
                             <FiBarChart2 />
                         </IconWrapper>
                         <ButtonTextContainer>
