@@ -104,7 +104,7 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title, exte
                 font: {
                     family: "'Arial', sans-serif",
                     weight: 'bold' as const,
-                    size: 16,
+                    size: 22, // Tamanho aumentado
                 },
                 formatter: (value: number, context: any) => {
                     const datapoints = context.chart.data.datasets[0].data as number[];
@@ -113,9 +113,10 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title, exte
                     if (parseFloat(percentage) < 2) return '';
                     return `${percentage}%`;
                 },
-                anchor: 'center' as const,
-                align: 'center' as const,
-                textStrokeColor: 'rgba(0,0,0,0.3)',
+                anchor: 'end' as const,
+                align: 'start' as const,
+                offset: 15,
+                textStrokeColor: 'rgba(0,0,0,0.5)', // Contorno mais forte
                 textStrokeWidth: 2,
             },
         },
@@ -129,16 +130,16 @@ const ChartComponent = forwardRef<any, ChartComponentProps>(({ data, title, exte
 
     return (
         <ChartSectionContainer>
-            {/* Container Flex para alinhar Gráfico e Legenda lado a lado */}
-            <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            {/* Container Flex para alinhar Gráfico e Legenda verticalmente */}
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
 
                 {/* 1. Área do Gráfico */}
-                <AcademicChartWrapper ref={externalChartRef} style={{ flex: '1 1 300px', height: '400px', maxWidth: '500px' }}>
+                <AcademicChartWrapper ref={externalChartRef} style={{ width: '100%', height: '400px', maxWidth: '500px' }}>
                     <Pie ref={ref} data={chartData} options={academicOptions} />
                 </AcademicChartWrapper>
 
                 {/* 2. Legenda HTML Personalizada */}
-                <div ref={externalLegendRef} style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px' }}>
+                <div ref={externalLegendRef} style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px' }}>
                     {data.map((slice, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <div style={{
